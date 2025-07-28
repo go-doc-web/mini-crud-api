@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cors from "cors";
+import userRoutes from "./routes/user.routes";
 
 dotenv.config();
 const app = express();
@@ -9,21 +11,23 @@ const DB_HOST = process.env.MONGO_URI as string;
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 // Base route
 
-app.get("/", (req, res) => {
-  res.send("Hello World!, This Api working !!!!!!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello World!, This Api working !!!!!!");
+// });
+app.use("/api", userRoutes);
 
 const startServer = async () => {
   try {
     await mongoose.connect(DB_HOST);
-    console.log("✅ Підключено до MongoDB");
+    console.log("✅ Connected to MongoDB");
     app.listen(PORT, () => {
-      console.log(`🟢 Сервер запущено на порту ${PORT}`);
+      console.log(`🟢 Server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("❌ Помилка підключення до MongoDB:", error);
+    console.error("❌ Error connecting to MongoDB:", error);
     process.exit(1);
   }
 };
