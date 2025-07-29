@@ -1,24 +1,39 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { UserModel } from "../models/User";
+import { createError } from "../utils/ApiError";
 
 // Get
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const users = await UserModel.find();
+    if (!users) {
+      throw createError(404, "Users not found");
+    }
     res.json(users);
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving users" });
+    next(error);
   }
 };
 // GET /users/:id
 
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = await UserModel.findById(req.params.id);
+    if (!user) {
+      throw createError(404, "User not found");
+    }
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: "Error getting user" });
+    next(error);
   }
 };
 

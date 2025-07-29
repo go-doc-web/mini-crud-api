@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import { errorHandler } from "./middleware/errorHandler";
 import userRoutes from "./routes/user.routes";
 
 dotenv.config();
@@ -12,6 +13,7 @@ const DB_HOST = process.env.MONGO_URI as string;
 // Middleware
 app.use(express.json());
 app.use(cors());
+app.use(errorHandler);
 // Base route
 
 // app.get("/", (req, res) => {
